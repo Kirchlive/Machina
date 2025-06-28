@@ -1,0 +1,12 @@
+# Python
+DEVELOPMENT.md
+MIGRATION_GUIDE.md
+README_DOCKER.md
+REDIS_SETUP.md
+tree.txt
+
+# Environment variables
+.env
+
+# Virtual env
+.venv/

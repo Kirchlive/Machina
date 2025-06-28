@@ -1,0 +1,30 @@
+# Core libraries for Phase 2 - Async Architecture
+openai>=1.0.0
+anthropic>=0.7.0
+python-dotenv
+google-generativeai>=0.3.0
+# asyncio is built into Python 3.7+
+
+# Phase 2.1 - Fully Async I/O & Connection Pooling
+aiofiles>=23.0.0
+httpx>=0.27.0
+# httpx[http2]>=0.27.0  # Optional: für HTTP/2 Support (benötigt h2 package)
+
+# Phase 3 - API Gateway & Platform Features
+fastapi
+uvicorn[standard]
+langfuse>=2.20.0
+streamlit
+pandas
+plotly
+pyyaml
+requests
+
+# Phase 4.2 - SDK & Dokumentation
+sphinx>=7.0.0
+sphinx-rtd-theme
+sphinx-autodoc-typehints
+
+# Phase 4.3 - Enterprise Features
+redis[hiredis]>=5.0.0
+# aioredis>=2.0.0  # Nicht mehr nötig, redis.asyncio ist in redis>=5.0.0 enthalten

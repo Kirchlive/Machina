@@ -1,0 +1,32 @@
+# creative_workflow.yaml
+# Beispiel-Workflow für kreative Content-Erstellung
+
+name: "Kreativer Content-Pipeline"
+description: "Erstellt eine Spielidee, schreibt einen Log-Eintrag und bewertet ihn"
+
+steps:
+  - id: "game_concept"
+    model: "claude35_sonnet_via_or"
+    prompt: |
+      Erfinde ein innovatives Konzept für ein Videospiel, das auf dem Prinzip der Photosynthese basiert.
+      Das Spiel soll sowohl lehrreich als auch unterhaltsam sein.
+      Beschreibe das Kernkonzept in 2-3 prägnanten Sätzen.
+
+  - id: "game_intro"
+    model: "gemini_15_pro_via_or"
+    prompt: |
+      Schreibe einen atmosphärischen, immersiven Eröffnungstext für die Spielanleitung dieses Videospiels:
+      
+      "{{ outputs.game_concept }}"
+      
+      Der Text soll den Spieler neugierig machen und in die Welt des Spiels einführen.
+      Verwende einen einladenden, aber professionellen Ton.
+
+  - id: "concept_analysis"
+    model: "llama3_70b_via_or"
+    prompt: |
+      Analysiere diesen Spielkonzept-Text auf seinen emotionalen Tonfall und seine Wirkung:
+      
+      "{{ outputs.game_intro }}"
+      
+      Fasse deine Analyse in einem einzelnen, präzisen Adjektiv zusammen, das die Gesamtwirkung beschreibt.

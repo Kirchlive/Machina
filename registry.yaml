@@ -1,0 +1,377 @@
+# registry_refactored.yaml
+# Refaktorierte Version mit YAML-Ankern zur Reduktion von Redundanz
+# Diese Datei definiert alle verfügbaren LLM-Modelle und ihre Konfiguration
+
+# ========================================
+# WIEDERVERWENDBARE TEMPLATES (ANKER)
+# ========================================
+
+_model_templates:
+  # Base-Konfigurationen für häufig verwendete Modelle
+  claude35_sonnet_base: &claude35_base
+    provider: "Anthropic"
+    context_window: 200000
+    cost:
+      input_per_million_tokens: 3.00
+      output_per_million_tokens: 15.00
+    capabilities: ["text", "vision", "tools"]
+
+  gpt4o_base: &gpt4o_base
+    provider: "OpenAI"
+    context_window: 128000
+    cost:
+      input_per_million_tokens: 5.00
+      output_per_million_tokens: 15.00
+    capabilities: ["text", "vision", "tools"]
+
+  gemini_15_pro_base: &gemini15_base
+    provider: "Google"
+    context_window: 2000000
+    cost:
+      input_per_million_tokens: 1.25
+      output_per_million_tokens: 5.00
+    capabilities: ["text", "vision", "audio", "video"]
+
+  # Service-Templates werden direkt in die Modell-Definitionen eingebettet
+
+  ollama_free: &ollama_free
+    cost:
+      input_per_million_tokens: 0.00
+      output_per_million_tokens: 0.00
+    capabilities: ["text"]
+
+# ========================================
+# DIREKTE PROVIDER-INTEGRATIONEN
+# ========================================
+
+gpt4o_mini:
+  adapter_service: "openai_service"
+  model_name_direct: "gpt-4o-mini"
+  model_name_openrouter: "openai/gpt-4o-mini"
+  provider: "OpenAI"
+  context_window: 128000
+  cost:
+    input_per_million_tokens: 0.15
+    output_per_million_tokens: 0.60
+  capabilities: ["text", "vision"]
+  notes: "Direkte OpenAI API-Integration. Erfordert OPENAI_API_KEY."
+
+claude35_sonnet:
+  <<: *claude35_base
+  adapter_service: "claude_service"
+  model_name_direct: "claude-3.5-sonnet-20240620"
+  model_name_openrouter: "anthropic/claude-3.5-sonnet"
+  notes: "Direkte Anthropic API-Integration. Erfordert CLAUDE_API_KEY."
+
+gemini_15_pro:
+  <<: *gemini15_base
+  adapter_service: "gemini_service"
+  model_name_direct: "gemini-1.5-pro-latest"
+  model_name_openrouter: "google/gemini-pro-1.5"
+  notes: "Direkte Google AI API-Integration. Erfordert GOOGLE_API_KEY."
+
+# ========================================
+# OPENROUTER GATEWAY MODELLE
+# ========================================
+
+claude35_sonnet_via_or:
+  <<: *claude35_base
+  adapter_service: "openrouter_gateway"
+  model_name_openrouter: "anthropic/claude-3.5-sonnet"
+  provider: "Anthropic (via OpenRouter)"
+  notes: "Nutzung über OpenRouter Gateway. Erfordert OPENROUTER_API_KEY."
+
+gemini_15_pro_via_or:
+  <<: *gemini15_base
+  adapter_service: "openrouter_gateway"
+  model_name_openrouter: "google/gemini-pro-1.5"
+  provider: "Google (via OpenRouter)"
+  notes: "Nutzung über OpenRouter Gateway. Erfordert OPENROUTER_API_KEY."
+
+gpt4o_via_or:
+  <<: *gpt4o_base
+  adapter_service: "openrouter_gateway"
+  model_name_openrouter: "openai/gpt-4o"
+  provider: "OpenAI (via OpenRouter)"
+  notes: "GPT-4o über OpenRouter Gateway. Erfordert OPENROUTER_API_KEY."
+
+llama3_70b_via_or:
+  adapter_service: "openrouter_gateway"
+  model_name_openrouter: "meta-llama/llama-3-70b-instruct"
+  provider: "Meta (via OpenRouter)"
+  context_window: 8192
+  cost:
+    input_per_million_tokens: 0.81
+    output_per_million_tokens: 1.10
+  capabilities: ["text"]
+  notes: "Llama 3 70B über OpenRouter Gateway. Erfordert OPENROUTER_API_KEY."
+
+mistral_large_via_or:
+  adapter_service: "openrouter_gateway"
+  model_name_openrouter: "mistralai/mistral-large"
+  provider: "Mistral AI (via OpenRouter)"
+  context_window: 32768
+  cost:
+    input_per_million_tokens: 4.00
+    output_per_million_tokens: 12.00
+  capabilities: ["text", "tools"]
+  notes: "Mistral Large über OpenRouter. Experimenteller Support."
+
+# ========================================
+# PLATTFORM-BASIERTE MODELLE
+# ========================================
+
+claude_code_wsl:
+  adapter_service: "cli_adapter"
+  platform: "cli"
+  tool_name: "claude"
+  command: "wsl -d Ubuntu /home/rob/.npm-global/bin/claude"
+  execution_env: "local"
+  interaction_mode: "interactive"
+  provider: "Anthropic CLI"
+  context_window: 200000
+  cost:
+    input_per_million_tokens: 0.00
+    output_per_million_tokens: 0.00
+  capabilities: ["text"]
+  notes: "Claude CLI-Tool via WSL von Windows aus (vollständiger Pfad)."
+
+# ========================================
+# OLLAMA LOKALE MODELLE (KOSTENLOS)
+# ========================================
+
+ollama_llama32:
+  <<: *ollama_free
+  adapter_service: "ollama_service"
+  model_name_direct: "llama3.2"
+  provider: "Meta (Ollama Local)"
+  context_window: 128000
+  notes: "Llama 3.2 lokale Ausführung über Ollama. Kostenlos."
+
+ollama_gemma2:
+  <<: *ollama_free
+  adapter_service: "ollama_service"
+  model_name_direct: "gemma2"
+  provider: "Google (Ollama Local)"
+  context_window: 8192
+  notes: "Gemma 2 lokale Ausführung über Ollama. Kostenlos."
+
+ollama_phi3:
+  <<: *ollama_free
+  adapter_service: "ollama_service"
+  model_name_direct: "phi3"
+  provider: "Microsoft (Ollama Local)"
+  context_window: 4096
+  notes: "Phi 3 lokale Ausführung über Ollama. Kostenlos."
+
+ollama_llama3_cli:
+  adapter_service: "cli_adapter"
+  platform: "cli"
+  tool_name: "ollama"
+  command: "ollama run llama3.2"
+  execution_env: "local"
+  interaction_mode: "interactive"
+  provider: "Meta (Ollama CLI)"
+  context_window: 128000
+  cost:
+    input_per_million_tokens: 0.00
+    output_per_million_tokens: 0.00
+  capabilities: ["text"]
+  notes: "Llama 3.2 über Ollama CLI. Lokale Ausführung."
+
+# ========================================
+# AGENTEN-KONFIGURATIONEN
+# ========================================
+
+agents:
+  researcher:
+    model: "gpt4o_via_or"
+    role: "Research Specialist"
+    goal: "Sammle umfassende, genaue und aktuelle Informationen zu gegebenen Themen."
+    backstory: "Ein erfahrener Rechercheur mit Zugang zu verschiedenen Informationsquellen."
+    tools: ["web_search", "summarize"]
+    output_schema: "ResearchReport"
+    max_iterations: 3
+    temperature: 0.3
+
+  writer:
+    model: "gpt4o_via_or"
+    role: "Creative Content Writer"
+    goal: "Ansprechende, gut strukturierte und leicht verständliche Texte erstellen."
+    backstory: "Ein talentierter Autor mit einem Flair für Marketing und technische Erklärungen."
+    tools: ["text_formatting", "grammar_check", "ask_human"]
+    input_schema: "ResearchReport"
+    output_schema: "FinalReport"
+    max_iterations: 2
+    temperature: 0.7
+
+  qa_agent:
+    model: "claude35_sonnet_via_or"
+    role: "Quality Assurance Specialist"
+    goal: "Bewerte die Qualität von Inhalten und gib konstruktives Feedback."
+    backstory: "Ein detailorientierter Qualitätsprüfer mit hohen Standards."
+    tools: ["quality_check", "fact_check"]
+    input_schema: "FinalReport"
+    output_schema: "QualityAssessment"
+    max_iterations: 1
+    temperature: 0.1
+
+  supervisor:
+    model: "claude35_sonnet_via_or"
+    role: "Project Supervisor"
+    goal: "Koordiniere Teams und stelle sicher, dass Projekte erfolgreich abgeschlossen werden."
+    backstory: "Ein erfahrener Projektmanager mit Expertise in der Teamführung."
+    tools: ["task_planning", "progress_tracking"]
+    output_schema: "TaskPlan"
+    max_iterations: 1
+    temperature: 0.2
+
+  analyst:
+    model: "gpt4o_via_or"
+    role: "Data Analyst & Strategist"
+    goal: "Komplexe Daten analysieren und strategische Empfehlungen ableiten."
+    backstory: "Ein analytischer Denker mit starken statistischen und strategischen Fähigkeiten."
+    tools: ["data_analysis", "visualization"]
+    output_schema: "AnalysisReport"
+    max_iterations: 2
+    temperature: 0.4
+
+  simple_writer:
+    model: "gpt4o_via_or"
+    role: "Simple Content Writer"
+    goal: "Erstelle kurze, direkte Texte ohne Rückfragen."
+    backstory: "Ein schneller Writer für einfache Inhalte ohne komplexe Interaktionen."
+    tools: ["text_formatting"]
+    output_schema: "FinalReport"
+    max_iterations: 1
+    temperature: 0.5
+
+  speed_tester:
+    model: "claude_code_wsl"
+    role: "Speed Test Agent"
+    goal: "Antworte ultra-schnell und minimal auf Test-Anfragen."
+    backstory: "Ein spezialisierter Agent für schnelle Tests und Validierungen."
+    tools: []
+    output_schema: "Text"
+    max_iterations: 1
+    temperature: 0.1
+
+# ========================================
+# CREW-KONFIGURATIONEN
+# ========================================
+
+crews:
+  content_creation_team:
+    name: "Content Creation Crew"
+    description: "Erstellt hochwertige Inhalte durch Research und Writing"
+    agents:
+      - "researcher"
+      - "writer"
+      - "qa_agent"
+    supervisor_model: "gpt4o_via_or"
+    graph:
+      entry_point: "researcher"
+      nodes:
+        researcher:
+          transitions_to: "writer"
+        writer:
+          conditional_transitions:
+            - condition: "quality_check"
+              target: "qa_agent"
+        qa_agent:
+          conditional_transitions:
+            - condition: "needs_revision"
+              target: "writer"
+            - condition: "approved"
+              target: "END"
+    expected_deliverables: ["research_report", "final_content"]
+    max_execution_time: 3600
+    max_iterations: 5
+    quality_threshold: 0.85
+
+  simple_content_team:
+    name: "Simple Content Creation Crew"
+    description: "Vereinfachte Content-Erstellung ohne ask_human für Speed-Tests"
+    agents:
+      - "simple_writer"
+    supervisor_model: "gpt4o_via_or"
+    graph:
+      entry_point: "simple_writer"
+      nodes:
+        simple_writer:
+          transitions_to: "END"
+    expected_deliverables: ["simple_content"]
+    max_execution_time: 300
+
+  analysis_team:
+    name: "Data Analysis Crew"
+    description: "Spezialisiert auf Datenanalyse und strategische Beratung"
+    agents:
+      - "researcher"
+      - "analyst"
+    supervisor_model: "claude35_sonnet_via_or"
+    graph:
+      entry_point: "researcher"
+      nodes:
+        researcher:
+          transitions_to: "analyst"
+        analyst:
+          transitions_to: "END"
+    expected_deliverables: ["analysis_report"]
+    max_execution_time: 2400
+
+  speed_test_team:
+    name: "Speed Test Team"
+    description: "Ultra-schnelle Crew für Tests mit verfügbarem Model"
+    agents:
+      - "speed_tester"
+    supervisor_model: "claude_code_wsl"
+    graph:
+      entry_point: "speed_tester"
+      nodes:
+        speed_tester:
+          transitions_to: "END"
+    expected_deliverables: ["quick_response"]
+    max_execution_time: 30
+
+  quality_assurance_team:
+    name: "Quality Assurance Crew"
+    description: "Fokussiert auf Qualitätsprüfung und Feedback-Loops"
+    agents:
+      - "writer"
+      - "qa_agent"
+    supervisor_model: "claude35_sonnet_via_or"
+    graph:
+      entry_point: "writer"
+      nodes:
+        writer:
+          transitions_to: "qa_agent"
+        qa_agent:
+          conditional_transitions:
+            - condition: "needs_major_revision"
+              target: "writer"
+            - condition: "approved"
+              target: "END"
+    expected_deliverables: ["quality_report"]
+    max_execution_time: 1800
+    quality_threshold: 0.90
+
+# ========================================
+# MISSION TEMPLATES
+# ========================================
+
+mission_templates:
+  blog_post:
+    crew: "content_creation_team"
+    goal: "Erstelle einen informativen Blog-Post über {topic}"
+    required_params: ["topic"]
+
+  analysis_report:
+    crew: "analysis_team"
+    goal: "Analysiere {data_source} und erstelle strategische Empfehlungen"
+    required_params: ["data_source"]
+
+  quick_content:
+    crew: "simple_content_team"
+    goal: "Erstelle kurzen Inhalt: {content_type}"
+    required_params: ["content_type"]
