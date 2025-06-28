@@ -48,7 +48,7 @@ In today's AI landscape, developers face a fragmented world of isolated LLMs. Ea
 
 ## 🏗️ High-Level Architecture
 
-
+```
       +-------------------------------------------------+
       |        Applications (API, Dashboard, SDK)       |
       +------------------------+------------------------+
@@ -75,7 +75,7 @@ In today's AI landscape, developers face a fragmented world of isolated LLMs. Ea
    | (OpenAI,  |    | (Playwright|    | Plugin    |     | (Ollama)  |
    |  Claude)  |    |  - future) |    | (future)  |     | (future)  |
    +-----------+    +------------+    +-----------+     +-----------+
-
+```
 ---
 
 ## 🚀 Quick Start (Docker - Recommended)
