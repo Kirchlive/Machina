@@ -16,7 +16,6 @@ Basierend auf den exzellenten Beispielen, die Sie bereitgestellt haben, habe ich
 ![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)
 ![Release](https://img.shields.io/badge/Release-v1.0-blueviolet.svg)
 
-![Machina Dashboard](https://i.imgur.com/3opVw6y.png)
 *The interactive Streamlit dashboard providing real-time metrics and model performance analysis.*
 
 ## 🎯 Why Machina?
