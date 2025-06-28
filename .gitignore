@@ -3,6 +3,7 @@ DEVELOPMENT.md
 MIGRATION_GUIDE.md
 README_DOCKER.md
 REDIS_SETUP.md
+OLLAMA_INTEGRATION.md
 tree.txt
 
 # Environment variables
