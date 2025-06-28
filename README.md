@@ -6,8 +6,7 @@ Basierend auf den exzellenten Beispielen, die Sie bereitgestellt haben, habe ich
 
 ### **Vorgeschlagene neue `README.md`**
 
-```markdown
-# 🚀 Machina: The Universal Middleware for LLM Orchestration
+´# 🚀 Machina: The Universal Middleware for LLM Orchestration
 
 **The ultimate open-source platform to connect, control, and orchestrate any Large Language Model through a unified, resilient, and extensible system.**
 
@@ -50,7 +49,7 @@ In today's AI landscape, developers face a fragmented world of isolated LLMs. Ea
 
 ## 🏗️ High-Level Architecture
 
-```plaintext
+
       +-------------------------------------------------+
       |        Applications (API, Dashboard, SDK)       |
       +------------------------+------------------------+
@@ -77,7 +76,6 @@ In today's AI landscape, developers face a fragmented world of isolated LLMs. Ea
    | (OpenAI,  |    | (Playwright|    | Plugin    |     | (Ollama)  |
    |  Claude)  |    |  - future) |    | (future)  |     | (future)  |
    +-----------+    +------------+    +-----------+     +-----------+
-```
 
 ---
 
